@@ -192,10 +192,13 @@ class WearablesViewModel(application: Application) : AndroidViewModel(applicatio
   }
 
   fun showSettings() {
+    android.util.Log.d("WearablesViewModel", "showSettings called")
     _uiState.update { it.copy(showSettings = true) }
+    android.util.Log.d("WearablesViewModel", "showSettings = ${_uiState.value.showSettings}")
   }
 
   fun hideSettings() {
+    android.util.Log.d("WearablesViewModel", "hideSettings called")
     _uiState.update { it.copy(showSettings = false) }
   }
 

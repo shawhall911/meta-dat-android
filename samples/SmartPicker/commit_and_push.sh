@@ -29,11 +29,17 @@ echo "🔍 Checking remote repository..."
 git remote -v
 
 echo ""
+echo "⚠️  GitHub requires authentication via Personal Access Token (PAT) or SSH"
+echo "   See GITHUB_AUTH_SETUP.md for setup instructions"
+echo ""
 read -p "Push to GitHub? (y/n) " -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
     echo "🚀 Pushing to GitHub..."
+    echo "   If prompted for password, use your Personal Access Token (not GitHub password)"
+    echo "   Get a token at: https://github.com/settings/tokens"
+    echo ""
     git push origin main || git push origin master
     echo "✅ Done! SmartPicker has been pushed to GitHub."
 else

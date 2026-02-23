@@ -3,6 +3,7 @@ package com.meta.wearable.dat.externalsampleapps.smartpicker.wearables
 import com.meta.wearable.dat.core.types.RegistrationState
 import com.meta.wearable.dat.externalsampleapps.smartpicker.settings.AiServiceType
 import kotlinx.collections.immutable.persistentListOf
+import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -12,7 +13,7 @@ class WearablesUiStateTest {
     @Test
     fun `isRegistered returns true when registration state is Registered`() {
         val state = WearablesUiState(
-            registrationState = RegistrationState.Registered
+            registrationState = RegistrationState.Registered()
         )
         assertTrue(state.isRegistered)
     }
@@ -28,7 +29,7 @@ class WearablesUiStateTest {
     @Test
     fun `isRegistered returns false when registration state is Registering`() {
         val state = WearablesUiState(
-            registrationState = RegistrationState.Registering
+            registrationState = RegistrationState.Registering()
         )
         assertFalse(state.isRegistered)
     }
@@ -59,7 +60,7 @@ class WearablesUiStateTest {
     @Test
     fun `state copy preserves unmodified values`() {
         val original = WearablesUiState(
-            registrationState = RegistrationState.Registered,
+            registrationState = RegistrationState.Registered(),
             hasMockDevices = true,
             isStreaming = true,
             aiServiceType = AiServiceType.MOCK
