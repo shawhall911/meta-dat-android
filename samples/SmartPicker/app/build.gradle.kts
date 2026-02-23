@@ -66,6 +66,8 @@ dependencies {
   implementation(libs.okhttp.logging)
   implementation(libs.kotlinx.serialization.json)
   implementation(libs.kotlinx.coroutines.core)
+  // DataStore for user preferences
+  implementation(libs.androidx.datastore.preferences)
   androidTestImplementation(libs.androidx.ui.test.junit4)
   androidTestImplementation(libs.androidx.test.uiautomator)
   androidTestImplementation(libs.androidx.test.rules)

@@ -34,6 +34,7 @@ import com.meta.wearable.dat.externalsampleapps.smartpicker.ai.HuggingFaceAiServ
 import com.meta.wearable.dat.externalsampleapps.smartpicker.ai.MockAiAnalysisService
 import com.meta.wearable.dat.externalsampleapps.smartpicker.audio.TextToSpeechService
 import com.meta.wearable.dat.externalsampleapps.smartpicker.wearables.WearablesViewModel
+import com.meta.wearable.dat.externalsampleapps.smartpicker.settings.AiServiceType
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -46,6 +47,7 @@ import java.io.ByteArrayOutputStream
 class StreamViewModel(
     application: Application,
     private val wearablesViewModel: WearablesViewModel,
+    private val aiServiceType: AiServiceType,
 ) : AndroidViewModel(application) {
 
   companion object {
@@ -64,36 +66,19 @@ class StreamViewModel(
   private var stateJob: Job? = null
   private var analysisJob: Job? = null
 
-  // AI and TTS services
-  // To use cloud AI: Replace MockAiAnalysisService() with CloudAiAnalysisService.create(apiUrl, apiKey)
-  // Example: CloudAiAnalysisService.create("https://your-api.com/analyze", "your-api-key")
-  private val aiService: AiAnalysisService = createAiService()
+  // AI and TTS services - created based on user preference
+  private val aiService: AiAnalysisService = createAiService(aiServiceType)
   private val ttsService: TextToSpeechService = TextToSpeechService(application)
   
-  private fun createAiService(): AiAnalysisService {
-    // ============================================
-    // AI SERVICE CONFIGURATION
-    // ============================================
-    // See AI_SERVICE_SETUP.md, FREE_AI_SERVICES.md, and GOOGLE_VISION_SETUP.md
-    
-    // Option 1: Use mock for testing (works offline, no API needed)
-    return MockAiAnalysisService()
-    
-    // Option 2: Use Google Cloud Vision API (RECOMMENDED - Reliable & Free)
-    // 1. Get API key from https://console.cloud.google.com/
-    // 2. Enable "Cloud Vision API"
-    // 3. Uncomment below and add your API key:
-    // return GoogleVisionAiService(apiKey = "YOUR_GOOGLE_API_KEY_HERE")
-    
-    // Option 3: Use Hugging Face (Now working with v1/chat/completions endpoint)
-    // Get your free API key at: https://huggingface.co/settings/tokens
-    // return HuggingFaceAiService(apiKey = "YOUR_HUGGINGFACE_API_KEY_HERE")
-    
-    // Option 4: Use custom cloud AI service
-    // return CloudAiAnalysisService.create(
-    //     apiUrl = "https://your-ai-service.com/v1/analyze",
-    //     apiKey = "your-api-key-here"
-    // )
+  private fun createAiService(type: AiServiceType): AiAnalysisService {
+    return when (type) {
+      AiServiceType.MOCK -> MockAiAnalysisService()
+      AiServiceType.HUGGING_FACE -> {
+        // Get your free API key at: https://huggingface.co/settings/tokens
+        // Replace YOUR_HUGGINGFACE_API_KEY_HERE with your actual key
+        HuggingFaceAiService(apiKey = "YOUR_HUGGINGFACE_API_KEY_HERE")
+      }
+    }
   }
 
   init {
@@ -272,6 +257,7 @@ class StreamViewModel(
   class Factory(
       private val application: Application,
       private val wearablesViewModel: WearablesViewModel,
+      private val aiServiceType: AiServiceType,
   ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
       if (modelClass.isAssignableFrom(StreamViewModel::class.java)) {
@@ -279,6 +265,7 @@ class StreamViewModel(
         return StreamViewModel(
             application = application,
             wearablesViewModel = wearablesViewModel,
+            aiServiceType = aiServiceType,
         )
             as T
       }

@@ -6,6 +6,7 @@ package com.meta.wearable.dat.externalsampleapps.smartpicker.wearables
 
 import com.meta.wearable.dat.core.types.DeviceIdentifier
 import com.meta.wearable.dat.core.types.RegistrationState
+import com.meta.wearable.dat.externalsampleapps.smartpicker.settings.AiServiceType
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
@@ -18,6 +19,8 @@ data class WearablesUiState(
     val isDebugMenuVisible: Boolean = false,
     val isGettingStartedSheetVisible: Boolean = false,
     val hasActiveDevice: Boolean = false,
+    val aiServiceType: AiServiceType = AiServiceType.HUGGING_FACE,
+    val showSettings: Boolean = false,
 ) {
   val isRegistered: Boolean = registrationState is RegistrationState.Registered || hasMockDevices
 }

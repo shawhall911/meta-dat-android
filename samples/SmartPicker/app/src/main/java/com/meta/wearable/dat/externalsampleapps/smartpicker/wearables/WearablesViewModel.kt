@@ -20,6 +20,8 @@ import com.meta.wearable.dat.core.types.Permission
 import com.meta.wearable.dat.core.types.PermissionStatus
 import com.meta.wearable.dat.core.types.RegistrationState
 import com.meta.wearable.dat.mockdevice.MockDeviceKit
+import com.meta.wearable.dat.externalsampleapps.smartpicker.settings.SettingsManager
+import com.meta.wearable.dat.externalsampleapps.smartpicker.settings.AiServiceType
 import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -35,6 +37,8 @@ class WearablesViewModel(application: Application) : AndroidViewModel(applicatio
 
   private val _uiState = MutableStateFlow(WearablesUiState())
   val uiState: StateFlow<WearablesUiState> = _uiState.asStateFlow()
+  
+  private val settingsManager = SettingsManager(application)
 
   // AutoDeviceSelector automatically selects the first available wearable device
   val deviceSelector: DeviceSelector = AutoDeviceSelector()
@@ -48,6 +52,13 @@ class WearablesViewModel(application: Application) : AndroidViewModel(applicatio
       return
     }
     monitoringStarted = true
+
+    // Monitor AI service type preference
+    viewModelScope.launch {
+      settingsManager.aiServiceType.collect { type ->
+        _uiState.update { it.copy(aiServiceType = type) }
+      }
+    }
 
     // Monitor device selector for active device
     deviceSelectorJob =
@@ -172,6 +183,20 @@ class WearablesViewModel(application: Application) : AndroidViewModel(applicatio
 
   fun hideGettingStartedSheet() {
     _uiState.update { it.copy(isGettingStartedSheetVisible = false) }
+  }
+
+  fun showSettings() {
+    _uiState.update { it.copy(showSettings = true) }
+  }
+
+  fun hideSettings() {
+    _uiState.update { it.copy(showSettings = false) }
+  }
+
+  fun setAiServiceType(type: AiServiceType) {
+    viewModelScope.launch {
+      settingsManager.setAiServiceType(type)
+    }
   }
 
   override fun onCleared() {

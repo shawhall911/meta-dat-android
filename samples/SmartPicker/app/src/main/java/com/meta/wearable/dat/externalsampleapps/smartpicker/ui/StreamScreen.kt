@@ -55,6 +55,7 @@ fun StreamScreen(
                 StreamViewModel.Factory(
                     application = (LocalActivity.current as ComponentActivity).application,
                     wearablesViewModel = wearablesViewModel,
+                    aiServiceType = wearablesViewModel.uiState.collectAsStateWithLifecycle().value.aiServiceType,
                 ),
         ),
 ) {
