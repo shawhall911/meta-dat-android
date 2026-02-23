@@ -1,4 +1,4 @@
-# SmartPicker App
+# SmartView App
 
 A sample Android application demonstrating AI-powered scene understanding using Meta Wearables Device Access Toolkit. This app showcases streaming video from Meta AI glasses, analyzing frames with cloud-based AI, and providing audio feedback via text-to-speech.
 
@@ -26,7 +26,7 @@ A sample Android application demonstrating AI-powered scene understanding using 
 1. Clone this repository
 1. Open the project in Android Studio
 1. Add your personal access token (classic) to the `local.properties` file (see [SDK for Android setup](https://wearables.developer.meta.com/docs/getting-started-toolkit/#sdk-for-android-setup))
-1. (Optional) Configure your AI service endpoint in `app/src/main/java/com/meta/wearable/dat/externalsampleapps/smartpicker/ai/AiAnalysisService.kt`
+1. (Optional) Configure your AI service endpoint in `app/src/main/java/com/meta/wearable/dat/externalsampleapps/smartview/ai/AiAnalysisService.kt`
    - Update `apiUrl` with your AI service endpoint
    - Add your API key if required
    - Or use the `MockAiAnalysisService` for testing without a real AI service
@@ -50,7 +50,7 @@ A sample Android application demonstrating AI-powered scene understanding using 
 
 The app includes a mock AI service for testing. To use a real cloud AI service:
 
-1. Open `app/src/main/java/com/meta/wearable/dat/externalsampleapps/smartpicker/ai/AiAnalysisService.kt`
+1. Open `app/src/main/java/com/meta/wearable/dat/externalsampleapps/smartview/ai/AiAnalysisService.kt`
 2. Replace `MockAiAnalysisService()` with `CloudAiAnalysisService()` in `StreamViewModel.kt`
 3. Update the `apiUrl` and `apiKey` parameters in `CloudAiAnalysisService`
 4. Ensure your AI service accepts:

@@ -1,23 +1,23 @@
-# SmartPicker End-to-End Testing Guide
+# SmartView End-to-End Testing Guide
 
 ## Prerequisites Setup
 
 ### 1. Copy Required Files (if not already present)
 
-From the `CameraAccess` sample, copy these files to `SmartPicker`:
+From the `CameraAccess` sample, copy these files to `SmartView`:
 ```bash
 cd /Users/peizheng/StudioProjects/meta-dat-android/samples
 
 # Copy Gradle wrapper files
-cp CameraAccess/gradlew SmartPicker/
-cp CameraAccess/gradlew.bat SmartPicker/
-cp CameraAccess/gradle/wrapper/gradle-wrapper.jar SmartPicker/gradle/wrapper/
+cp CameraAccess/gradlew SmartView/
+cp CameraAccess/gradlew.bat SmartView/
+cp CameraAccess/gradle/wrapper/gradle-wrapper.jar SmartView/gradle/wrapper/
 
 # Copy keystore for signing
-cp CameraAccess/app/sample.keystore SmartPicker/app/
+cp CameraAccess/app/sample.keystore SmartView/app/
 
 # Make gradlew executable
-chmod +x SmartPicker/gradlew
+chmod +x SmartView/gradlew
 ```
 
 ### 2. Verify Configuration
@@ -32,7 +32,7 @@ Check that `local.properties` has:
 
 1. **Open Project**
    - Open Android Studio
-   - File → Open → Navigate to `samples/SmartPicker`
+   - File → Open → Navigate to `samples/SmartView`
    - Wait for Gradle sync to complete
 
 2. **Sync Gradle**
@@ -46,7 +46,7 @@ Check that `local.properties` has:
 ### Option B: Using Command Line
 
 ```bash
-cd /Users/peizheng/StudioProjects/meta-dat-android/samples/SmartPicker
+cd /Users/peizheng/StudioProjects/meta-dat-android/samples/SmartView
 
 # Set Java home (if needed)
 export JAVA_HOME=/usr/local/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home
@@ -101,9 +101,9 @@ export JAVA_HOME=/usr/local/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home
 
 ## Testing the App End-to-End
 
-### Step 1: Launch SmartPicker
+### Step 1: Launch SmartView
 
-1. Open SmartPicker app on your phone
+1. Open SmartView app on your phone
 2. Grant permissions when prompted:
    - Bluetooth
    - Bluetooth Connect
@@ -114,7 +114,7 @@ export JAVA_HOME=/usr/local/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home
 1. **Tap "Connect my glasses" button**
    - You'll be redirected to Meta AI app
    - Confirm the connection request
-   - Return to SmartPicker app
+   - Return to SmartView app
 
 2. **Wait for Registration**
    - App will show "Waiting for an active device"
@@ -173,7 +173,7 @@ export JAVA_HOME=/usr/local/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home
 
 **Issue**: Permission denied
 - **Fix**: Go to Meta AI app → Settings → App Permissions
-- **Fix**: Grant camera permission to SmartPicker
+- **Fix**: Grant camera permission to SmartView
 
 ### No Video Stream
 
@@ -231,11 +231,11 @@ export JAVA_HOME=/usr/local/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home
 
 ```bash
 # Using ADB
-adb logcat | grep -i "SmartPicker\|StreamViewModel\|AiAnalysis\|TextToSpeech"
+adb logcat | grep -i "SmartView\|StreamViewModel\|AiAnalysis\|TextToSpeech"
 
 # Or in Android Studio
 # View → Tool Windows → Logcat
-# Filter by: SmartPicker
+# Filter by: SmartView
 ```
 
 ### Common Log Tags

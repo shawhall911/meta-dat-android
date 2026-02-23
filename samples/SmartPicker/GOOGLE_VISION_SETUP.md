@@ -24,7 +24,7 @@ Since Hugging Face API endpoints are currently not working, let's use **Google C
 
 ### Step 2: Update Your Code
 
-Edit `app/src/main/java/com/meta/wearable/dat/externalsampleapps/smartpicker/stream/StreamViewModel.kt`:
+Edit `app/src/main/java/com/meta/wearable/dat/externalsampleapps/smartview/stream/StreamViewModel.kt`:
 
 Find the `createAiService()` function and change:
 

@@ -1,4 +1,4 @@
-# APK Size Analysis - SmartPicker (87MB)
+# APK Size Analysis - SmartView (87MB)
 
 ## Size Breakdown
 
@@ -98,7 +98,7 @@ This reduces size by ~15MB but excludes older devices.
 - **WhatsApp**: ~45MB
 - **Instagram**: ~60MB
 - **Messenger**: ~50MB
-- **SmartPicker**: ~87MB (includes Meta Wearable SDK)
+- **SmartView**: ~87MB (includes Meta Wearable SDK)
 
 Our app is larger because it includes the full Meta Wearable SDK for glasses connectivity.
 

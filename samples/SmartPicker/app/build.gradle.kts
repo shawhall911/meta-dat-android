@@ -15,13 +15,13 @@ if (localPropertiesFile.exists()) {
 }
 
 android {
-  namespace = "com.meta.wearable.dat.externalsampleapps.smartpicker"
+  namespace = "com.meta.wearable.dat.externalsampleapps.smartview"
   compileSdk = 35
 
   buildFeatures { buildConfig = true }
 
   defaultConfig {
-    applicationId = "com.meta.wearable.dat.externalsampleapps.smartpicker"
+    applicationId = "com.meta.wearable.dat.externalsampleapps.smartview"
     minSdk = 31
     targetSdk = 34
     versionCode = 1

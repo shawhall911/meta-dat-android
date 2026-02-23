@@ -131,7 +131,7 @@ return CloudAiAnalysisService.create(
 
 ---
 
-## 🎯 My Recommendation for SmartPicker
+## 🎯 My Recommendation for SmartView
 
 ### **Best Choice: Hugging Face Inference API**
 

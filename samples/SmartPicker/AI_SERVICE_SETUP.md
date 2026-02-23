@@ -4,7 +4,7 @@
 
 ### Step 1: Enable Cloud AI Service
 
-Edit `app/src/main/java/com/meta/wearable/dat/externalsampleapps/smartpicker/stream/StreamViewModel.kt`:
+Edit `app/src/main/java/com/meta/wearable/dat/externalsampleapps/smartview/stream/StreamViewModel.kt`:
 
 Find the `createAiService()` function (around line 67) and change:
 
@@ -182,8 +182,8 @@ For production, you can use BuildConfig to avoid hardcoding:
 # All AI service logs
 adb logcat | grep -i "CloudAiAnalysisService"
 
-# All SmartPicker logs
-adb logcat | grep -i "SmartPicker\|StreamViewModel"
+# All SmartView logs
+adb logcat | grep -i "SmartView\|StreamViewModel"
 
 # Network requests
 adb logcat | grep -i "okhttp"

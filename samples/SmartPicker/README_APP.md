@@ -1,6 +1,6 @@
-# SmartPicker - AI-Powered Scene Understanding
+# SmartView - AI-Powered Scene Understanding
 
-SmartPicker is an Android app that uses Ray-Ban Meta glasses to capture video and analyze scenes with AI.
+SmartView is an Android app that uses Ray-Ban Meta glasses to capture video and analyze scenes with AI.
 
 ## Features
 

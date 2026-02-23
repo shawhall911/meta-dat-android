@@ -1,4 +1,4 @@
-# SmartPicker Release Instructions
+# SmartView Release Instructions
 
 The app is ready to publish! Follow these steps:
 
@@ -12,7 +12,7 @@ The app is ready to publish! Follow these steps:
 - Updated app icon
 
 ✅ **Production APK built**
-- Located at: `/Users/peizheng/Downloads/SmartPicker-v1.3-Production.apk`
+- Located at: `/Users/peizheng/Downloads/SmartView-v1.3-Production.apk`
 - Size: 87MB
 - Includes working HuggingFace API integration
 
@@ -23,10 +23,10 @@ The app is ready to publish! Follow these steps:
 
 2. **Create new release**:
    - Tag version: `v1.3`
-   - Title: `SmartPicker v1.3 - Production Release`
+   - Title: `SmartView v1.3 - Production Release`
    
 3. **Upload APK**:
-   - Attach: `/Users/peizheng/Downloads/SmartPicker-v1.3-Production.apk`
+   - Attach: `/Users/peizheng/Downloads/SmartView-v1.3-Production.apk`
    
 4. **Release notes** (copy this):
 
@@ -42,7 +42,7 @@ The app is ready to publish! Follow these steps:
 ## Setup Instructions
 1. Install APK on Android phone paired with Ray-Ban Meta glasses
 2. Open Meta AI app and enable Developer Mode
-3. Launch SmartPicker and tap 'Connect my glasses'
+3. Launch SmartView and tap 'Connect my glasses'
 4. Configure AI service in Settings (gear icon)
 5. Start AI analysis
 
@@ -66,10 +66,10 @@ gh auth login
 Then create the release:
 ```bash
 gh release create v1.3 \
-  --title "SmartPicker v1.3 - Production Release" \
+  --title "SmartView v1.3 - Production Release" \
   --notes-file RELEASE_NOTES.md \
   --repo shawhall911/meta-dat-android \
-  /Users/peizheng/Downloads/SmartPicker-v1.3-Production.apk
+  /Users/peizheng/Downloads/SmartView-v1.3-Production.apk
 ```
 
 ## What's in This Release

@@ -40,6 +40,6 @@ dependencyResolutionManagement {
   }
 }
 
-rootProject.name = "SmartPicker"
+rootProject.name = "SmartView"
 
 include(":app")

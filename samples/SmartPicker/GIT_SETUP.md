@@ -1,4 +1,4 @@
-# Git Setup Guide for SmartPicker
+# Git Setup Guide for SmartView
 
 ## Quick Commands to Push to GitHub
 
@@ -8,23 +8,23 @@ cd /Users/peizheng/StudioProjects/meta-dat-android
 git status
 ```
 
-### 2. Add SmartPicker Files
+### 2. Add SmartView Files
 ```bash
-# Add all SmartPicker files
-git add samples/SmartPicker/
+# Add all SmartView files
+git add samples/SmartView/
 
 # Or add specific files
-git add samples/SmartPicker/app/
-git add samples/SmartPicker/gradle/
-git add samples/SmartPicker/*.gradle.kts
-git add samples/SmartPicker/*.properties
-git add samples/SmartPicker/README.md
-git add samples/SmartPicker/TESTING_GUIDE.md
+git add samples/SmartView/app/
+git add samples/SmartView/gradle/
+git add samples/SmartView/*.gradle.kts
+git add samples/SmartView/*.properties
+git add samples/SmartView/README.md
+git add samples/SmartView/TESTING_GUIDE.md
 ```
 
 ### 3. Commit Changes
 ```bash
-git commit -m "Add SmartPicker app with AI-powered scene understanding
+git commit -m "Add SmartView app with AI-powered scene understanding
 
 - Camera streaming from Meta AI glasses
 - Cloud AI integration for scene analysis
@@ -63,28 +63,28 @@ Make sure these are in `.gitignore`:
 
 Add to `.gitignore` if not already there:
 ```
-# SmartPicker specific
-samples/SmartPicker/local.properties
-samples/SmartPicker/app/sample.keystore
-samples/SmartPicker/app/build/
-samples/SmartPicker/build/
-samples/SmartPicker/.gradle/
+# SmartView specific
+samples/SmartView/local.properties
+samples/SmartView/app/sample.keystore
+samples/SmartView/app/build/
+samples/SmartView/build/
+samples/SmartView/.gradle/
 ```
 
 ## Alternative: Create Separate Repository
 
-If you want SmartPicker as a separate repository:
+If you want SmartView as a separate repository:
 
 ```bash
-cd samples/SmartPicker
+cd samples/SmartView
 
 # Initialize new git repo
 git init
 git add .
-git commit -m "Initial commit: SmartPicker app"
+git commit -m "Initial commit: SmartView app"
 
 # Create repo on GitHub, then:
-git remote add origin https://github.com/YOUR_USERNAME/smartpicker.git
+git remote add origin https://github.com/YOUR_USERNAME/smartview.git
 git branch -M main
 git push -u origin main
 ```

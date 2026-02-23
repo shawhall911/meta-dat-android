@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" project="smartpicker">
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" project="smartview">
 
     <!-- Home Screen -->
     <string name="register_button_title" description="Connect App">Connect my glasses</string>
@@ -20,7 +20,7 @@
     <string name="analyzing" description="Analyzing">Analyzing scene...</string>
 
     <!-- Non Stream Screen -->
-    <string name="smartpicker_icon_description" description="SmartPicker icon description">SmartPicker icon</string>
+    <string name="smartview_icon_description" description="SmartView icon description">SmartView icon</string>
     <string name="non_stream_screen_description" description="Non stream screen description">Tap the Start AI Analysis button to begin analyzing scenes from your glasses camera.</string>
     <string name="non_stream_screen_title" description="Non stream screen title">AI Scene Analysis</string>
     <string name="waiting_for_active_device" description="Waiting for active device message">Waiting for an active device</string>

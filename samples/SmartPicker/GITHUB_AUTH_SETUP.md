@@ -6,7 +6,7 @@
 
 1. Go to GitHub.com → Settings → Developer settings → Personal access tokens → Tokens (classic)
 2. Click "Generate new token (classic)"
-3. Give it a name like "SmartPicker Git Access"
+3. Give it a name like "SmartView Git Access"
 4. Select scopes:
    - ✅ `repo` (full control of private repositories)
    - ✅ `workflow` (if using GitHub Actions)
