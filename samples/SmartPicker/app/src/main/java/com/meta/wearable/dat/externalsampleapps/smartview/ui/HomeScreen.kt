@@ -19,6 +19,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -36,14 +38,9 @@ fun HomeScreen(
   val scrollState = rememberScrollState()
   val activity = LocalActivity.current
   val context = LocalContext.current
+  val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
   Box(modifier = modifier.fillMaxSize()) {
-    // Settings button in top right
-    SettingsButton(
-        viewModel = viewModel,
-        modifier = Modifier.align(Alignment.TopEnd).padding(16.dp),
-    )
-    
     Column(
         modifier =
             Modifier
@@ -54,6 +51,17 @@ fun HomeScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(24.dp),
     ) {
+      // Settings button in top right
+      Box(
+          modifier = Modifier.fillMaxWidth(),
+          contentAlignment = Alignment.TopEnd,
+      ) {
+        SettingsButton(
+            viewModel = viewModel,
+            modifier = Modifier.padding(16.dp),
+        )
+      }
+      
       Spacer(modifier = Modifier.weight(1f))
       Column(
           horizontalAlignment = Alignment.CenterHorizontally,

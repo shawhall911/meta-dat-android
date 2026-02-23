@@ -164,7 +164,12 @@ class WearablesViewModel(application: Application) : AndroidViewModel(applicatio
   fun navigateToHome() {
     _uiState.update { it.copy(isStreaming = false) }
     // Reset registration state to show HomeScreen
-    _uiState.update { it.copy(hasActiveDevice = false) }
+    _uiState.update { 
+      it.copy(
+        hasActiveDevice = false,
+        registrationState = RegistrationState.Unavailable()
+      )
+    }
   }
 
   fun showDebugMenu() {
