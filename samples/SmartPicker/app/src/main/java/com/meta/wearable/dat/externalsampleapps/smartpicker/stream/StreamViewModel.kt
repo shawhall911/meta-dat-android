@@ -28,6 +28,9 @@ import com.meta.wearable.dat.camera.types.VideoQuality
 import com.meta.wearable.dat.core.Wearables
 import com.meta.wearable.dat.core.selectors.DeviceSelector
 import com.meta.wearable.dat.externalsampleapps.smartpicker.ai.AiAnalysisService
+import com.meta.wearable.dat.externalsampleapps.smartpicker.ai.CloudAiAnalysisService
+import com.meta.wearable.dat.externalsampleapps.smartpicker.ai.GoogleVisionAiService
+import com.meta.wearable.dat.externalsampleapps.smartpicker.ai.HuggingFaceAiService
 import com.meta.wearable.dat.externalsampleapps.smartpicker.ai.MockAiAnalysisService
 import com.meta.wearable.dat.externalsampleapps.smartpicker.audio.TextToSpeechService
 import com.meta.wearable.dat.externalsampleapps.smartpicker.wearables.WearablesViewModel
@@ -62,8 +65,36 @@ class StreamViewModel(
   private var analysisJob: Job? = null
 
   // AI and TTS services
-  private val aiService: AiAnalysisService = MockAiAnalysisService() // Use mock for now, replace with CloudAiAnalysisService when ready
+  // To use cloud AI: Replace MockAiAnalysisService() with CloudAiAnalysisService.create(apiUrl, apiKey)
+  // Example: CloudAiAnalysisService.create("https://your-api.com/analyze", "your-api-key")
+  private val aiService: AiAnalysisService = createAiService()
   private val ttsService: TextToSpeechService = TextToSpeechService(application)
+  
+  private fun createAiService(): AiAnalysisService {
+    // ============================================
+    // AI SERVICE CONFIGURATION
+    // ============================================
+    // See AI_SERVICE_SETUP.md, FREE_AI_SERVICES.md, and GOOGLE_VISION_SETUP.md
+    
+    // Option 1: Use mock for testing (works offline, no API needed)
+    return MockAiAnalysisService()
+    
+    // Option 2: Use Google Cloud Vision API (RECOMMENDED - Reliable & Free)
+    // 1. Get API key from https://console.cloud.google.com/
+    // 2. Enable "Cloud Vision API"
+    // 3. Uncomment below and add your API key:
+    // return GoogleVisionAiService(apiKey = "YOUR_GOOGLE_API_KEY_HERE")
+    
+    // Option 3: Use Hugging Face (Now working with v1/chat/completions endpoint)
+    // Get your free API key at: https://huggingface.co/settings/tokens
+    // return HuggingFaceAiService(apiKey = "YOUR_HUGGINGFACE_API_KEY_HERE")
+    
+    // Option 4: Use custom cloud AI service
+    // return CloudAiAnalysisService.create(
+    //     apiUrl = "https://your-ai-service.com/v1/analyze",
+    //     apiKey = "your-api-key-here"
+    // )
+  }
 
   init {
     // Initialize TTS
@@ -198,11 +229,16 @@ class StreamViewModel(
         } ?: run {
           val error = result.exceptionOrNull()
           Log.e(TAG, "AI analysis failed", error)
+          val errorMessage = "Analysis error: ${error?.message ?: "Unknown error"}"
           _uiState.update { 
             it.copy(
-              aiAnalysis = "Analysis unavailable: ${error?.message ?: "Unknown error"}",
+              aiAnalysis = errorMessage,
               isAnalyzing = false
             )
+          }
+          // Optionally speak the error
+          if (!ttsService.isSpeaking()) {
+            ttsService.speak("Analysis unavailable", android.speech.tts.TextToSpeech.QUEUE_FLUSH)
           }
         }
       } catch (e: Exception) {

@@ -36,28 +36,54 @@ interface AiAnalysisService {
 }
 
 class CloudAiAnalysisService(
-    private val apiUrl: String = "https://api.example.com/v1/vision/analyze", // Replace with actual AI service URL
-    private val apiKey: String? = null // Add your API key here
+    private val apiUrl: String,
+    private val apiKey: String? = null,
+    private val authHeader: String = "Bearer" // Can be "Bearer" or "Api-Key" etc.
 ) : AiAnalysisService {
 
     companion object {
-        private const val TAG = "AiAnalysisService"
+        private const val TAG = "CloudAiAnalysisService"
         private val JSON = Json { ignoreUnknownKeys = true }
+        
+        // Helper to create service from configuration
+        fun create(
+            apiUrl: String? = null,
+            apiKey: String? = null
+        ): CloudAiAnalysisService {
+            val url = apiUrl ?: "https://api.example.com/v1/vision/analyze"
+            return CloudAiAnalysisService(apiUrl = url, apiKey = apiKey)
+        }
     }
 
     private val client = OkHttpClient.Builder()
         .connectTimeout(30, TimeUnit.SECONDS)
         .readTimeout(30, TimeUnit.SECONDS)
+        .addInterceptor { chain ->
+            val request = chain.request()
+            Log.d(TAG, "Requesting: ${request.url}")
+            val response = chain.proceed(request)
+            Log.d(TAG, "Response: ${response.code}")
+            response
+        }
         .build()
 
     override suspend fun analyzeFrame(bitmap: Bitmap): Result<AiAnalysisResponse> {
         return withContext(Dispatchers.IO) {
             try {
+                // Validate configuration
+                if (apiUrl.contains("example.com") || apiUrl.isEmpty()) {
+                    return@withContext Result.failure(
+                        IllegalArgumentException("AI service URL not configured. Please set a valid API endpoint.")
+                    )
+                }
+
                 // Convert bitmap to base64
                 val outputStream = ByteArrayOutputStream()
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 80, outputStream)
                 val imageBytes = outputStream.toByteArray()
                 val base64Image = Base64.encodeToString(imageBytes, Base64.NO_WRAP)
+
+                Log.d(TAG, "Sending image for analysis (${imageBytes.size} bytes)")
 
                 // Create request
                 val requestBody = AiAnalysisRequest(image = base64Image)
@@ -70,8 +96,9 @@ class CloudAiAnalysisService(
                     .post(body)
                     .addHeader("Content-Type", "application/json")
 
+                // Add authentication header
                 apiKey?.let {
-                    requestBuilder.addHeader("Authorization", "Bearer $it")
+                    requestBuilder.addHeader("Authorization", "$authHeader $it")
                 }
 
                 val request = requestBuilder.build()
@@ -81,27 +108,35 @@ class CloudAiAnalysisService(
                 val responseBody = response.body?.string()
 
                 if (response.isSuccessful && responseBody != null) {
-                    val analysisResponse = JSON.decodeFromString<AiAnalysisResponse>(responseBody)
-                    Result.success(analysisResponse)
-                } else {
-                    Log.e(TAG, "AI analysis failed: ${response.code} - $responseBody")
-                    // Return a mock response for development/testing
-                    Result.success(
-                        AiAnalysisResponse(
-                            description = "Scene analysis unavailable. Please configure your AI service endpoint.",
-                            confidence = 0.0f
+                    Log.d(TAG, "AI analysis successful: $responseBody")
+                    try {
+                        val analysisResponse = JSON.decodeFromString<AiAnalysisResponse>(responseBody)
+                        Result.success(analysisResponse)
+                    } catch (e: Exception) {
+                        Log.e(TAG, "Failed to parse AI response", e)
+                        Result.failure(
+                            IllegalStateException("Invalid response format from AI service: ${e.message}")
                         )
+                    }
+                } else {
+                    val errorMsg = "AI analysis failed: HTTP ${response.code} - $responseBody"
+                    Log.e(TAG, errorMsg)
+                    Result.failure(
+                        IllegalStateException(errorMsg)
                     )
                 }
+            } catch (e: java.net.UnknownHostException) {
+                val errorMsg = "Cannot reach AI service. Check your internet connection and API URL."
+                Log.e(TAG, errorMsg, e)
+                Result.failure(IllegalStateException(errorMsg))
+            } catch (e: java.net.SocketTimeoutException) {
+                val errorMsg = "AI service request timed out. The service may be slow or unavailable."
+                Log.e(TAG, errorMsg, e)
+                Result.failure(IllegalStateException(errorMsg))
             } catch (e: Exception) {
-                Log.e(TAG, "Error analyzing frame", e)
-                // Return a mock response for development/testing
-                Result.success(
-                    AiAnalysisResponse(
-                        description = "Analyzing scene... (Mock response - configure AI service for real analysis)",
-                        confidence = 0.5f
-                    )
-                )
+                val errorMsg = "Error analyzing frame: ${e.message}"
+                Log.e(TAG, errorMsg, e)
+                Result.failure(IllegalStateException(errorMsg))
             }
         }
     }

@@ -32,7 +32,7 @@ fun NonStreamScreen(
     onRequestWearablesPermission: suspend (Permission) -> PermissionStatus,
     modifier: Modifier = Modifier,
 ) {
-  val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+  val uiState = viewModel.uiState.collectAsStateWithLifecycle()
 
   Column(
       modifier =
@@ -53,7 +53,7 @@ fun NonStreamScreen(
           fontSize = 24.sp,
           fontWeight = FontWeight.Bold,
       )
-      if (!uiState.hasActiveDevice) {
+      if (!uiState.value.hasActiveDevice) {
         CircularProgressIndicator()
         Text(
             text = "Waiting for an active device",
@@ -73,7 +73,7 @@ fun NonStreamScreen(
         label = "Start AI Analysis",
         onClick = { viewModel.navigateToStreaming(onRequestWearablesPermission) },
         modifier = Modifier.fillMaxWidth(),
-        enabled = uiState.hasActiveDevice,
+        enabled = uiState.value.hasActiveDevice,
     )
     Spacer(modifier = Modifier.weight(1f))
   }

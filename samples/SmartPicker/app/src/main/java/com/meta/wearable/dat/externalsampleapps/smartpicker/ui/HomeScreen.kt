@@ -75,7 +75,7 @@ fun HomeScreen(
     SwitchButton(
         label = "Connect my glasses",
         onClick = {
-          viewModel.startRegistration(activity)
+          activity?.let { viewModel.startRegistration(it) }
           Toast.makeText(context, "You'll be redirected to the Meta AI app", Toast.LENGTH_SHORT)
               .show()
         },

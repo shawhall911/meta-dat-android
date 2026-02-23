@@ -30,6 +30,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -57,12 +58,12 @@ fun StreamScreen(
                 ),
         ),
 ) {
-  val streamUiState by streamViewModel.uiState.collectAsStateWithLifecycle()
+  val streamUiState = streamViewModel.uiState.collectAsStateWithLifecycle()
 
   LaunchedEffect(Unit) { streamViewModel.startStream() }
 
   Box(modifier = modifier.fillMaxSize()) {
-    streamUiState.videoFrame?.let { videoFrame ->
+    streamUiState.value.videoFrame?.let { videoFrame ->
       Image(
           bitmap = videoFrame.asImageBitmap(),
           contentDescription = "Live stream",
@@ -70,14 +71,14 @@ fun StreamScreen(
           contentScale = ContentScale.Crop,
       )
     }
-    if (streamUiState.streamSessionState == StreamSessionState.STARTING) {
+    if (streamUiState.value.streamSessionState == StreamSessionState.STARTING) {
       CircularProgressIndicator(
           modifier = Modifier.align(Alignment.Center),
       )
     }
 
     // AI Analysis Card
-    if (streamUiState.aiAnalysis != null || streamUiState.isAnalyzing) {
+    if (streamUiState.value.aiAnalysis != null || streamUiState.value.isAnalyzing) {
       Card(
           modifier =
               Modifier.align(Alignment.TopCenter)
@@ -94,7 +95,7 @@ fun StreamScreen(
               verticalAlignment = Alignment.CenterVertically,
               horizontalArrangement = Arrangement.spacedBy(8.dp),
           ) {
-            if (streamUiState.isSpeaking) {
+            if (streamUiState.value.isSpeaking) {
               Icon(
                   imageVector = Icons.Default.VolumeUp,
                   contentDescription = "Speaking",
@@ -108,7 +109,7 @@ fun StreamScreen(
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
             )
-            if (streamUiState.isAnalyzing) {
+            if (streamUiState.value.isAnalyzing) {
               Spacer(modifier = Modifier.width(8.dp))
               CircularProgressIndicator(
                   modifier = Modifier.width(16.dp).height(16.dp),
@@ -117,7 +118,7 @@ fun StreamScreen(
               )
             }
           }
-          streamUiState.aiAnalysis?.let { analysis ->
+          streamUiState.value.aiAnalysis?.let { analysis ->
             Text(
                 text = analysis,
                 color = Color.White,
@@ -140,7 +141,7 @@ fun StreamScreen(
           verticalAlignment = Alignment.CenterVertically,
       ) {
         SwitchButton(
-            label = if (streamUiState.analysisEnabled) "Disable AI" else "Enable AI",
+            label = if (streamUiState.value.analysisEnabled) "Disable AI" else "Enable AI",
             onClick = { streamViewModel.toggleAnalysis() },
             modifier = Modifier.weight(1f),
         )
