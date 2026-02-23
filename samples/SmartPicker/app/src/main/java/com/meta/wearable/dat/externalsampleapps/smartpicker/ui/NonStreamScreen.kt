@@ -6,13 +6,22 @@ package com.meta.wearable.dat.externalsampleapps.smartpicker.ui
 
 import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -34,47 +43,90 @@ fun NonStreamScreen(
 ) {
   val uiState = viewModel.uiState.collectAsStateWithLifecycle()
 
-  Column(
-      modifier =
-          modifier
-              .fillMaxSize()
-              .padding(all = 24.dp)
-              .navigationBarsPadding(),
-      horizontalAlignment = Alignment.CenterHorizontally,
-      verticalArrangement = Arrangement.spacedBy(24.dp),
-  ) {
-    Spacer(modifier = Modifier.weight(1f))
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(16.dp),
+  Box(modifier = modifier.fillMaxSize()) {
+    // Top bar with back button and settings
+    Row(
+        modifier = Modifier.fillMaxWidth().padding(16.dp).align(Alignment.TopCenter),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
     ) {
-      Text(
-          text = "SmartPicker Ready",
-          fontSize = 24.sp,
-          fontWeight = FontWeight.Bold,
-      )
-      if (!uiState.value.hasActiveDevice) {
-        CircularProgressIndicator()
-        Text(
-            text = "Waiting for an active device",
-            fontSize = 14.sp,
-            textAlign = TextAlign.Center,
+      IconButton(onClick = { viewModel.navigateToHome() }) {
+        Icon(
+            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+            contentDescription = "Back",
         )
-      } else {
-        Text(
-            text = "Device connected. Tap below to start AI analysis.",
-            fontSize = 14.sp,
-            textAlign = TextAlign.Center,
+      }
+      
+      // Show current AI service
+      val aiType = uiState.value.aiServiceType
+      Text(
+          text = if (aiType.name == "HUGGING_FACE") "HF AI" else "Mock AI",
+          style = MaterialTheme.typography.labelSmall,
+          color = MaterialTheme.colorScheme.onSurfaceVariant,
+      )
+      
+      IconButton(onClick = { viewModel.showSettings() }) {
+        Icon(
+            imageVector = Icons.Default.Settings,
+            contentDescription = "Settings",
         )
       }
     }
-    Spacer(modifier = Modifier.weight(1f))
-    SwitchButton(
-        label = "Start AI Analysis",
-        onClick = { viewModel.navigateToStreaming(onRequestWearablesPermission) },
-        modifier = Modifier.fillMaxWidth(),
-        enabled = uiState.value.hasActiveDevice,
-    )
-    Spacer(modifier = Modifier.weight(1f))
+    
+    // Settings dialog
+    if (uiState.value.showSettings) {
+      SettingsDialog(
+          currentType = uiState.value.aiServiceType,
+          onDismiss = { viewModel.hideSettings() },
+          onSelect = { type -> 
+            viewModel.setAiServiceType(type)
+            viewModel.hideSettings()
+          },
+      )
+    }
+
+    Column(
+        modifier =
+            Modifier
+                .fillMaxSize()
+                .padding(all = 24.dp)
+                .navigationBarsPadding(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(24.dp),
+    ) {
+      Spacer(modifier = Modifier.weight(1f))
+      Column(
+          horizontalAlignment = Alignment.CenterHorizontally,
+          verticalArrangement = Arrangement.spacedBy(16.dp),
+      ) {
+        Text(
+            text = "SmartPicker Ready",
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Bold,
+        )
+        if (!uiState.value.hasActiveDevice) {
+          CircularProgressIndicator()
+          Text(
+              text = "Waiting for an active device",
+              fontSize = 14.sp,
+              textAlign = TextAlign.Center,
+          )
+        } else {
+          Text(
+              text = "Device connected. Tap below to start AI analysis.",
+              fontSize = 14.sp,
+              textAlign = TextAlign.Center,
+          )
+        }
+      }
+      Spacer(modifier = Modifier.weight(1f))
+      SwitchButton(
+          label = "Start AI Analysis",
+          onClick = { viewModel.navigateToStreaming(onRequestWearablesPermission) },
+          modifier = Modifier.fillMaxWidth(),
+          enabled = uiState.value.hasActiveDevice,
+      )
+      Spacer(modifier = Modifier.weight(1f))
+    }
   }
 }
