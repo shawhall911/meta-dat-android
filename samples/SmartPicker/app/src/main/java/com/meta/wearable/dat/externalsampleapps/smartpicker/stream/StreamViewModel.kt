@@ -28,7 +28,7 @@ import com.meta.wearable.dat.camera.types.VideoQuality
 import com.meta.wearable.dat.core.Wearables
 import com.meta.wearable.dat.core.selectors.DeviceSelector
 import com.meta.wearable.dat.externalsampleapps.smartpicker.ai.AiAnalysisService
-import com.meta.wearable.dat.externalsampleapps.smartpicker.ai.CloudAiAnalysisService
+import com.meta.wearable.dat.externalsampleapps.smartpicker.BuildConfig
 import com.meta.wearable.dat.externalsampleapps.smartpicker.ai.GoogleVisionAiService
 import com.meta.wearable.dat.externalsampleapps.smartpicker.ai.HuggingFaceAiService
 import com.meta.wearable.dat.externalsampleapps.smartpicker.ai.MockAiAnalysisService
@@ -74,15 +74,12 @@ class StreamViewModel(
     return when (type) {
       AiServiceType.MOCK -> MockAiAnalysisService()
       AiServiceType.HUGGING_FACE -> {
-        // Get your free API key at: https://huggingface.co/settings/tokens
-        // Replace YOUR_HUGGINGFACE_API_KEY_HERE with your actual key
-        HuggingFaceAiService(apiKey = "YOUR_HUGGINGFACE_API_KEY_HERE")
+        HuggingFaceAiService(apiKey = BuildConfig.HUGGINGFACE_API_KEY)
       }
     }
   }
 
   init {
-    // Initialize TTS
     ttsService.initialize { success ->
       if (success) {
         Log.d(TAG, "TextToSpeech initialized successfully")

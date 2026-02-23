@@ -1,8 +1,17 @@
+import java.util.Properties
+
 plugins {
   alias(libs.plugins.android.application)
   alias(libs.plugins.jetbrains.kotlin.android)
   alias(libs.plugins.compose.compiler)
   alias(libs.plugins.kotlin.serialization)
+}
+
+// Load local properties for API keys
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localProperties.load(localPropertiesFile.inputStream())
 }
 
 android {
@@ -20,6 +29,9 @@ android {
 
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     vectorDrawables { useSupportLibrary = true }
+    
+    // API key from local.properties (for development)
+    buildConfigField("String", "HUGGINGFACE_API_KEY", "\"${localProperties.getProperty("huggingface.api.key", "YOUR_HUGGINGFACE_API_KEY_HERE")}\"")
   }
 
   buildTypes {
@@ -68,7 +80,22 @@ dependencies {
   implementation(libs.kotlinx.coroutines.core)
   // DataStore for user preferences
   implementation(libs.androidx.datastore.preferences)
+  
+  // Unit tests
+  testImplementation(libs.junit)
+  testImplementation(libs.mockk)
+  testImplementation(libs.kotlinx.coroutines.test)
+  testImplementation(libs.turbine)
+  testImplementation(libs.robolectric)
+  testImplementation(libs.androidx.compose.ui.test.manifest)
+  testImplementation(libs.androidx.compose.ui.test.junit4)
+  
+  // Android instrumented tests
   androidTestImplementation(libs.androidx.ui.test.junit4)
   androidTestImplementation(libs.androidx.test.uiautomator)
   androidTestImplementation(libs.androidx.test.rules)
+  androidTestImplementation(libs.mockk.android)
+  androidTestImplementation(libs.kotlinx.coroutines.test)
+  androidTestImplementation(libs.androidx.compose.ui.test.manifest)
+  debugImplementation(libs.androidx.compose.ui.test.manifest)
 }

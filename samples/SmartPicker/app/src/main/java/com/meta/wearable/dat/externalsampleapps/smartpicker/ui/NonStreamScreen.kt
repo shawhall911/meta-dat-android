@@ -4,7 +4,8 @@
 
 package com.meta.wearable.dat.externalsampleapps.smartpicker.ui
 
-import androidx.activity.compose.LocalActivity
+import android.widget.Toast
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -42,59 +43,58 @@ fun NonStreamScreen(
     modifier: Modifier = Modifier,
 ) {
   val uiState = viewModel.uiState.collectAsStateWithLifecycle()
+  val context = LocalContext.current
+  
+  android.util.Log.d("NonStreamScreen", "Recomposing, showSettings = ${uiState.value.showSettings}")
 
   Box(modifier = modifier.fillMaxSize()) {
-    // Top bar with back button and settings
-    Row(
-        modifier = Modifier.fillMaxWidth().padding(16.dp).align(Alignment.TopCenter),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically,
-    ) {
-      IconButton(onClick = { viewModel.navigateToHome() }) {
-        Icon(
-            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-            contentDescription = "Back",
-        )
-      }
-      
-      // Show current AI service
-      val aiType = uiState.value.aiServiceType
-      Text(
-          text = if (aiType.name == "HUGGING_FACE") "HF AI" else "Mock AI",
-          style = MaterialTheme.typography.labelSmall,
-          color = MaterialTheme.colorScheme.onSurfaceVariant,
-      )
-      
-      IconButton(onClick = { viewModel.showSettings() }) {
-        Icon(
-            imageVector = Icons.Default.Settings,
-            contentDescription = "Settings",
-        )
-      }
-    }
-    
-    // Settings dialog
-    if (uiState.value.showSettings) {
-      SettingsDialog(
-          currentType = uiState.value.aiServiceType,
-          onDismiss = { viewModel.hideSettings() },
-          onSelect = { type -> 
-            viewModel.setAiServiceType(type)
-            viewModel.hideSettings()
-          },
-      )
-    }
-
     Column(
-        modifier =
-            Modifier
-                .fillMaxSize()
-                .padding(all = 24.dp)
-                .navigationBarsPadding(),
+        modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(24.dp),
     ) {
-      Spacer(modifier = Modifier.weight(1f))
+      // Top bar with back button and settings
+      Row(
+          modifier = Modifier.fillMaxWidth().padding(16.dp),
+          horizontalArrangement = Arrangement.SpaceBetween,
+          verticalAlignment = Alignment.CenterVertically,
+      ) {
+        IconButton(onClick = { viewModel.navigateToHome() }) {
+          Icon(
+              imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+              contentDescription = "Back",
+          )
+        }
+        
+        // Show current AI service
+        val aiType = uiState.value.aiServiceType
+        Text(
+            text = if (aiType.name == "HUGGING_FACE") "HF AI" else "Mock AI",
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+        
+        IconButton(onClick = { 
+          Toast.makeText(context, "Settings clicked", Toast.LENGTH_SHORT).show()
+          viewModel.showSettings() 
+        }) {
+          Icon(
+              imageVector = Icons.Default.Settings,
+              contentDescription = "Settings",
+          )
+        }
+      }
+      
+      // Main content
+      Column(
+          modifier =
+              Modifier
+                  .fillMaxSize()
+                  .padding(all = 24.dp)
+                  .navigationBarsPadding(),
+          horizontalAlignment = Alignment.CenterHorizontally,
+          verticalArrangement = Arrangement.spacedBy(24.dp),
+      ) {
+        Spacer(modifier = Modifier.weight(1f))
       Column(
           horizontalAlignment = Alignment.CenterHorizontally,
           verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -111,6 +111,13 @@ fun NonStreamScreen(
               fontSize = 14.sp,
               textAlign = TextAlign.Center,
           )
+          // Cancel button when waiting for device
+          SwitchButton(
+              label = "Cancel",
+              onClick = { viewModel.navigateToHome() },
+              modifier = Modifier.fillMaxWidth(0.5f),
+              isDestructive = true,
+          )
         } else {
           Text(
               text = "Device connected. Tap below to start AI analysis.",
@@ -119,14 +126,27 @@ fun NonStreamScreen(
           )
         }
       }
-      Spacer(modifier = Modifier.weight(1f))
-      SwitchButton(
-          label = "Start AI Analysis",
-          onClick = { viewModel.navigateToStreaming(onRequestWearablesPermission) },
-          modifier = Modifier.fillMaxWidth(),
-          enabled = uiState.value.hasActiveDevice,
+        Spacer(modifier = Modifier.weight(1f))
+        SwitchButton(
+            label = "Start AI Analysis",
+            onClick = { viewModel.navigateToStreaming(onRequestWearablesPermission) },
+            modifier = Modifier.fillMaxWidth(),
+            enabled = uiState.value.hasActiveDevice,
+        )
+        Spacer(modifier = Modifier.weight(1f))
+      }
+    }
+    
+    // Settings dialog - outside the Column, on top of everything
+    if (uiState.value.showSettings) {
+      SettingsDialog(
+          currentType = uiState.value.aiServiceType,
+          onDismiss = { viewModel.hideSettings() },
+          onSelect = { type -> 
+            viewModel.setAiServiceType(type)
+            viewModel.hideSettings()
+          },
       )
-      Spacer(modifier = Modifier.weight(1f))
     }
   }
 }
